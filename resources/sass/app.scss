@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;600;700&display=swap');
+
+$primary : #6875f5;
+
+$h6-font-size : 17px;
+
+$accordion-button-bg : #6875f53d;
+$accordion-padding-x : 0px;
+$accordion-padding-y : 11px;
+$accordion-button-padding-x : 1rem;
+
+$accordion-border-color: #6875f53d;
+$accordion-border-radius: 0px;
+$accordion-border-width : 0px;
+
+$form-check-input-width: 1.4em;
+
+$dropdown-min-width: 2px;
+$dropdown-padding-y: 1px;
+$dropdown-spacer: 1px;
+    //$form-check-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='currentColor'> <path d='M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z' /> </svg>");
+//$form-check-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='currentColor'> <path d='M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z' /> </svg>");
+//
+//$form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='currentColor'> <path d='M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z' /> </svg>");
+
+
+$font-family-sans-serif : 'Montserrat', sans-serif;
+
+// Bootstrap
+@import '../../node_modules/bootstrap/scss/bootstrap';
+@import "../../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+@import "../../node_modules/animate.css/animate.min.css";
+@import "../css/custom.css";
