@@ -35,6 +35,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     })->name('dashboard');
 
     // Project
+    Route::prefix("project")->name("project.")->controller(ProjectController::class)->group(function (){
+        Route::get('/project-pdf',"projectPdf")->name("exportPdf");
+        Route::get('/project-csv/export/{extension}',"CSVExport")->name('exportCSV');
+        Route::put('/status/{project}','status')->name('status');
+    });
     Route::resource("project",ProjectController::class);
 
     // Language

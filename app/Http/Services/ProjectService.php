@@ -18,12 +18,16 @@ class ProjectService
     {
         $this->imageService = $imageService;
         $this->imgType = "project_logo";
-        $this->folderName = Config::projectImgType;
+        $this->folderName = "project";
         $this->imgPath = '/public/img/project/';
     }
 
-    public function getProjects($perPage){
-        $projects = Project::with(['image'])->latest("id")->paginate($perPage);
+    public function getProjects($perPage = null){
+        if (empty($perPage)){
+            $projects = Project::with(['image'])->latest("id")->get();
+        } else {
+            $projects = Project::with(['image'])->latest("id")->paginate($perPage);
+        }
         return $projects;
     }
 
@@ -101,13 +105,20 @@ class ProjectService
     }
 
     public function delete($project){
-        $project->delete();
+        DB::beginTransaction();
 
-        $image = $this->imageService->getOldImage($project->id, Config::projectImgType);
+        try {
+            $project->delete();
 
-        delOldImage($project->id, Config::projectImgPath, Config::projectImgType);
-        $image->delete();
+            $image = $this->imageService->getOldImage($project->id, Config::projectImgType);
 
-        return $project;
+            delOldImage($project->id, Config::projectImgPath, Config::projectImgType);
+            $image->delete();
+            DB::commit();
+        } catch (\Throwable $e){
+            DB::rollBack();
+            return $e->getMessage();
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\CoreImage;
+use App\Models\Language;
 use App\Models\LanguageString;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -77,6 +78,18 @@ if ( !function_exists('delOldImage')){
         $imgPath = $imgPathString;
         $oldImage = CoreImage::where('img_parent_id',$imgParentId)->where('img_type', $imgType)->first();
         Storage::delete($imgPath.$oldImage->img_path);
+    }
+}
+
+if ( !function_exists('changeStatus')){
+    function changeStatus($model){
+        if ($model->status){
+            $model->status = 0;
+        } else {
+            $model->status = 1;
+        }
+        $model->update();
+        return $model;
     }
 }
 
