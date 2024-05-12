@@ -3,8 +3,8 @@
         <div class="container-fluid px-1">
 <!--            <a class="navbar-brand">Navbar</a>-->
             <div>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <form @submit.prevent="handleGlobalSearch" class="d-flex" role="search">
+                    <input v-model="form.searchValue" class="form-control me-2"  placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
@@ -37,12 +37,16 @@
 <script>
 import {loadLanguageAsync, getActiveLanguage} from "laravel-vue-i18n";
 import {Inertia} from "@inertiajs/inertia";
+import {useForm} from "@inertiajs/inertia-vue3";
 
 export default {
     name: "NavBar",
     props: ["imgPath", "activeLanguages"],
     data() {
         return {
+            form : useForm({
+                searchValue : '',
+            }),
             selectLanguage: localStorage.getItem('lang') ? localStorage.getItem('lang') : getActiveLanguage(),
         }
     },
@@ -65,6 +69,9 @@ export default {
             Inertia.get(route('language.changeLanguage',lang));
             localStorage.setItem('lang',lang);
             loadLanguageAsync(lang)
+        },
+        handleGlobalSearch() {
+            Inertia.get(route('global.search', this.form));
         }
     },
 }

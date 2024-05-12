@@ -22,11 +22,34 @@ class ProjectService
         $this->imgPath = '/public/img/project/';
     }
 
-    public function getProjects($perPage = null){
+    public function getProjects($perPage = null, $params = null){
         if (empty($perPage)){
-            $projects = Project::with(['image'])->latest("id")->get();
+            $projects = Project::with(['image','user'])->latest("id")->get();
         } else {
-            $projects = Project::with(['image'])->latest("id")->paginate($perPage);
+
+            if (!empty($params->perPage)){
+                $perPage = $params->perPage;
+            }
+
+            $projects = Project::with(['image','user'])
+
+                                ->when($params->searchKey, function ($q) use ($params){
+                                    $q->where('name','LIKE', "%$params->searchKey%");
+                                })
+                                ->when($params->field, function ($q) use ($params){
+                                    $q->orderBy("$params->field", "$params->direction");
+                                })
+                                ->when($params->status || $params->status == 0, function ($q) use ($params){
+                                    if ($params->status !== null){
+                                        $q->where("status", "$params->status");
+                                    }
+                                })
+//                                ->when($params->status || $params->status == 0, function ($q) use ($params){
+//                                    $q->where("status", "$params->status");
+//                                })
+                                ->latest("id")
+                                ->paginate($perPage)
+                                ->withQueryString();
         }
         return $projects;
     }
@@ -111,9 +134,10 @@ class ProjectService
             $project->delete();
 
             $image = $this->imageService->getOldImage($project->id, Config::projectImgType);
-
-            delOldImage($project->id, Config::projectImgPath, Config::projectImgType);
-            $image->delete();
+            if (!empty($image)){
+                delOldImage($project->id, Config::projectImgPath, Config::projectImgType);
+                $image->delete();
+            }
             DB::commit();
         } catch (\Throwable $e){
             DB::rollBack();

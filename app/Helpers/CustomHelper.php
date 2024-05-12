@@ -93,3 +93,101 @@ if ( !function_exists('changeStatus')){
     }
 }
 
+if ( !function_exists('deeplinkGenerate')){
+    function deeplinkGenerate($title, $description, $img){
+
+        // check description length
+        if(strlen($description)>6605){
+            $description = substr($description, 0, 6605);
+        }
+
+        // $title = strtolower($title);
+        // $item_name = str_replace(' ', '-', $title);
+        // $longUrl= $backend_setting->dyn_link_deep_url.$id;
+
+        $landingPage= "http://localhost:8000";
+
+        //Web API Key From Firebase
+        $key = "AIzaSyD8q_shdfMpO3cr1y_WQ_cLm-C5kSnk05M";
+
+        //Firebase Rest API URL
+        $url = "https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=" . $key;
+
+        //To link with Android App, so need to provide with android package name
+        $androidInfo = array(
+            // "androidPackageName" => $backend_setting->dyn_link_package_name,
+            // "androidFallbackLink" => $landingPage,
+        );
+
+        //For iOS
+        $iOSInfo = array(
+            // "iosBundleId" => $backend_setting->ios_boundle_id ,
+            // "iosAppStoreId" => $backend_setting->ios_appstore_id,
+            // "iosFallbackLink" => $landingPage,
+        );
+
+        //For meta data when share the URL
+        $socialMetaTagInfo = array(
+            "socialDescription" => $description,
+            "socialImageLink"   => $img,
+            "socialTitle"       => $title
+        );
+
+        //For only 4 character at url
+        $suffix = array(
+            "option" => "SHORT"
+        );
+
+        $data = array(
+            "dynamicLinkInfo" => array(
+               "dynamicLinkDomain" => "letsshare.page.link",
+            //    "link" => $longUrl,
+               "link" => $landingPage,
+            //    "androidInfo" => $androidInfo,
+            //     "iosInfo" => $iOSInfo,
+               "socialMetaTagInfo" => $socialMetaTagInfo
+            ),
+            "suffix" => $suffix
+       );
+
+       $headers = array('Content-Type: application/json');
+
+        $ch = curl_init ();
+        curl_setopt ( $ch, CURLOPT_URL, $url );
+        curl_setopt ( $ch, CURLOPT_POST, true );
+        curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
+        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt ( $ch, CURLOPT_POSTFIELDS, json_encode($data) );
+
+        $data = curl_exec ( $ch );
+        curl_close ( $ch );
+
+        if($data != false){
+            $short_url = json_decode($data);
+            if(isset($short_url->error)){
+                $status = [
+                    'msg' => $short_url->error->message,
+                    'flag' => 'error',
+                ];
+                return $status;
+            } else {
+                $status = [
+                    'msg' => $short_url->shortLink,
+                    'flag' => 'success',
+                ];
+                return $status;
+
+            }
+        }else{
+            $status = [
+                'msg' => 'Wrong Configuration',
+                'flag' => 'error',
+            ];
+            return $status;
+
+        }
+    }
+}
+
+
+

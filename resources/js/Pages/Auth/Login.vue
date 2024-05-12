@@ -14,7 +14,7 @@
         {{ status }}
       </div>
 
-      <form @submit.prevent="submit">
+        <form @submit.prevent="submit">
         <div class="mb-3">
           <jet-label for="email" value="Email" />
           <jet-input id="email" type="email" v-model="form.email" required autofocus />
@@ -51,6 +51,15 @@
           </div>
         </div>
       </form>
+        <hr>
+        <div class="d-flex justify-content-center align-items-center">
+            <a :href="route('redirect', 'github')" class="btn btn-primary">
+                <i class="fa-brands fa-github"></i>
+            </a>
+        </div>
+<!--        <a :href="route('redirect', 'telegram')" class="btn btn-primary">-->
+<!--            Telegram-->
+<!--        </a>-->
     </div>
   </jet-authentication-card>
 </template>
@@ -65,6 +74,7 @@ import JetCheckbox from '@/Jetstream/Checkbox.vue'
 import JetLabel from '@/Jetstream/Label.vue'
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3';
+import {Inertia} from "@inertiajs/inertia";
 
 export default defineComponent({
   components: {
@@ -104,6 +114,9 @@ export default defineComponent({
           .post(this.route('login'), {
             onFinish: () => this.form.reset('password'),
           })
+    },
+    handleGithub(){
+        Inertia.get(route("redirect"));
     }
   }
 })

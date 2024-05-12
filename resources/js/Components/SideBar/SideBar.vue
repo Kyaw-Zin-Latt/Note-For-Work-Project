@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-x position-sticky top-0" style="height: 100vh !important; background-color: #6875f53d !important;">
+    <div class="overflow-x position-sticky top-0 mx-1" style="height: 100vh !important; background-color: #6875f53d !important;">
         <div class="">
 <!--            Logo Start-->
             <h3 class="py-3 text-center fw-bold mb-4">
@@ -14,15 +14,19 @@
             <div class="accordion accordion-flush" id="accordionFlushExample">
                 <SideMenuDropDown title="Entry" icon="fa-circle-plus" icon-color="text-primary" dy-num="One">
                     <SubSideMenu href="project.index" title="Project" url-start="/project" />
+                    <SubSideMenu href="issue.index" title="Issue" url-start="/issue" />
+                    <SubSideMenu href="team.index" title="Teams" url-start="/team" />
+
                 </SideMenuDropDown>
                 <SideMenuDropDown title="Setting" icon="fa-gear" icon-color="text-info" dy-num="Two">
                     <SubSideMenu href="language.index" title="Language" url-start="/language" />
+                    <!-- <SubSideMenu href="backup" title="Backup" url-start="/backup" /> -->
                 </SideMenuDropDown>
             </div>
 
             <div class="mx-3">
                 <form @submit.prevent="logout">
-                    <button class="btn btn-danger w-100" type="submit">
+                    <button class="btn btn-danger w-100 position-absolute bottom-0 mb-2 logoutBtn" type="submit">
                         <i class="fa-solid fa-lock"></i>
                         Logout
                     </button>

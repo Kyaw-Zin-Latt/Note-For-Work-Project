@@ -16,6 +16,10 @@ import { InertiaProgress } from '@inertiajs/progress';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import { i18nVue, getActiveLanguage, isLoaded  } from 'laravel-vue-i18n'
+import DataTable from 'laravel-vue-datatable';
+import CKEditor from '@ckeditor/ckeditor5-vue';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 // import Swal from 'sweetalert2'
 // import 'sweetalert2/src/sweetalert2.scss'
@@ -41,7 +45,10 @@ createInertiaApp({
                 },
             })
             .use(VueSweetalert2)
+            .use(DataTable)
+            .use( CKEditor )
             .use(ZiggyVue, Ziggy)
+            .component('Datepicker', Datepicker)
             .component('InertiaHead', Head)
             .component('InertiaLink', Link)
             .mount(el);

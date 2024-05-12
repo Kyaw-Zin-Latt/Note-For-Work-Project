@@ -7,6 +7,7 @@ use App\Exports\ProjectsExport;
 use App\Exports\UsersExport;
 use App\Http\Services\ImageService;
 use App\Http\Services\ProjectService;
+use App\Imports\ProjectsImport;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 use Nette\Utils\Image;
 
 class ProjectController extends Controller
@@ -28,10 +30,21 @@ class ProjectController extends Controller
         $this->perPage = Config::perPage;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $projects = $this->projectService->getProjects($this->perPage);
-        return renderView("Entry/Project/Index", ["projects" => $projects]);
+
+        $projects = $this->projectService->getProjects($this->perPage, $request);
+
+//        return $projects;
+
+        if (!empty($request->params)){
+
+            $filteredValue = '';
+        } else {
+            $filteredValue = $request;
+        }
+
+        return renderView("Entry/Project/Index", ["projects" => $projects, "filteredValue" => $filteredValue]);
     }
 
     /**
@@ -136,8 +149,28 @@ class ProjectController extends Controller
 //        ]);
 //        return (new UsersExport())->download('users.tsv', \Maatwebsite\Excel\Excel::TSV);
 //        return (new UsersExport())->download('users.ods', \Maatwebsite\Excel\Excel::ODS);
-        return Excel::download(new UsersExport(), 'users.'.$extension);
+        return Excel::download(new ProjectsExport(), 'projects.'.$extension);
 
+    }
+
+    public function CSVImport(Request $request){
+        $importFile = $request->file('csvImportFile');
+        $projectImport = new ProjectsImport();
+        $projectImport->import($importFile);
+
+        if ($projectImport->failures()){
+            return redirect()->back()->with("status",["flag" => "danger", "msg" => $projectImport->failures()]);
+        } else {
+            return redirect()->back()->with("status",["flag" => "success", "msg" => "Project CSV have been imported successfully."]);
+        }
+
+//        foreach ($projectImport->failures() as $failure) {
+//            return $failure;
+//            $failure->row(); // row that went wrong
+//            $failure->attribute(); // either heading key (if using heading row concern) or column index
+//            $failure->errors(); // Actual error messages from Laravel validator
+//            $failure->values(); // The values of the row that has failed.
+//        }
     }
 
 }

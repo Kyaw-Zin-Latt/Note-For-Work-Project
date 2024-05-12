@@ -1,6 +1,6 @@
 <template>
   <div class="row g-0">
-      <div class="col-3">
+      <div class="col-3 position-relative">
           <SideBar />
       </div>
       <div class="col-9">

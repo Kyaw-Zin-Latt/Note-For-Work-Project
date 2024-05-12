@@ -1,6 +1,6 @@
 <template>
     <nav aria-label="...">
-        <ul class="pagination">
+        <ul class="pagination mb-0">
             <li v-for="link in links" :class="[
                 'page-item',
                 link.url === null && 'disabled',

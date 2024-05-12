@@ -30,5 +30,21 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'github' => [
+        'client_id' => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect' => env('GITHUB_REDIRECT'),
+    ],
+    'twitch' => [
+        'client_id' => env('TWITCH_CLIENT_ID'),
+        'client_secret' => env('TWITCH_CLIENT_SECRET'),
+        'redirect' => env('TWITCH_REDIRECT_URI')
+    ],
+    'telegram' => [
+        'bot' => env('TELEGRAM_BOT_NAME'),  // The bot's username
+        'client_id' => null,
+        'client_secret' => env('TELEGRAM_TOKEN'),
+        'redirect' => env('TELEGRAM_REDIRECT_URI'),
+    ],
 
 ];
